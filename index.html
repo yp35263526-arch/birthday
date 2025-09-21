@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Aditi 🎉</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      text-align: center;
+      padding: 1rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .container {
+      background: linear-gradient(135deg, #fff1f3, #ffe0e6);
+      padding: 2rem 1.5rem;
+      border-radius: 25px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      max-width: 400px;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      border: 2px solid #ff4b5c;
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #ff4b5c;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
+    p {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      color: #444;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+    }
+    #timer {
+      font-size: 1rem;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #222;
+      text-shadow: 1px 1px 5px rgba(255,75,92,0.4);
+    }
+    .balloon {
+      position: absolute;
+      width: 40px;
+      height: 60px;
+      border-radius: 20px 20px 0 0;
+      bottom: -60px;
+      animation: float 6s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+    canvas#fireworks {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fireworks"></canvas>
+  <div class="container">
+    <h1>Happy Birthday Aditi 🎉</h1>
+    <p>Wishing you endless smiles, joyful adventures, and sparkling moments on your special day ✨🌸</p>
+    <div id="timer"></div>
+  </div>
+
+  <script>
+    const colors = ['#FF4B5C', '#FFD93D', '#6BCB77', '#4D96FF', '#9D4EDD'];
+
+    // Timer
+    const birthDate = new Date("2011-09-25T00:00:00");
+
+    function updateTimer() {
+      const now = new Date();
+      let diff = now - birthDate;
+      let totalYears = 14;
+      let totalMonths = 168;
+      let totalDays = 5113;
+      let totalHours = 122640;
+      let totalMinutes = 7358400;
+      let totalSeconds = Math.floor(diff / 1000);
+      document.getElementById("timer").innerText =
+        `Aditi, you have completed ${totalYears} years, ${totalMonths} months, ${totalDays} days, ${totalHours} hrs, ${totalMinutes} minutes, and ${totalSeconds} seconds ⏳`;
+    }
+
+    setInterval(updateTimer,1000);
+    updateTimer();
+
+    // Balloons
+    for(let i=0;i<15;i++){
+      let b=document.createElement('div');
+      b.className='balloon';
+      b.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+      b.style.left=Math.random()*100+'vw';
+      b.style.animationDuration=4+Math.random()*3+'s';
+      document.body.appendChild(b);
+    }
+
+    // Fireworks
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const fireworks = [];
+
+    function random(min,max){ return Math.random()*(max-min)+min; }
+
+    function createFirework(){
+      const x = random(100, canvas.width-100);
+      const y = random(100, canvas.height/2);
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      const particles = [];
+      for(let i=0;i<30;i++){
+        particles.push({
+          x: x,
+          y: y,
+          vx: random(-3,3),
+          vy: random(-3,3),
+          alpha: 1,
+          color: color
+        });
+      }
+      fireworks.push(particles);
+    }
+
+    function draw(){
+      ctx.fillStyle = 'rgba(0,0,0,0.2)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      for(let i=fireworks.length-1;i>=0;i--){
+        const particles = fireworks[i];
+        for(let p of particles){
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,3,0,Math.PI*2);
+          ctx.fillStyle=p.color;
+          ctx.globalAlpha=p.alpha;
+          ctx.fill();
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= 0.02;
+        }
+        if(particles[0].alpha<=0) fireworks.splice(i,1);
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(draw);
+    }
+
+    setInterval(createFirework, 800);
+    draw();
+  </script>
+</body>
+</html>
